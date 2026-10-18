@@ -1,3 +1,16 @@
+# Restoration changes (unreleased)
+
+Based on upstream 0.2.3; the manifest version and plugin ID are retained. Identify this restoration by its Git commit.
+
+- Qualify nine Commons Color references for Qt 6.12.
+- Explicitly scope twenty widget references while preserving settings and layout bindings.
+- Match native laptop hotkey filtering to the widget and extend parser regression coverage.
+- Rebuild the native executable from reviewed source; document target libc constraints.
+- Add a portable private-IPC fixture and source-test CI, with live/isolated claims separated.
+- Document safe installation/fallback, upstream credits and remaining limitations.
+
+## Original upstream changelog
+
 # Changelog
 
 Notable changes to Keyboard Layout Pulse are documented here.
