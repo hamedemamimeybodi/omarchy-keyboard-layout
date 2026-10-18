@@ -119,6 +119,8 @@ int hypr_keyboard_is_typing(const char *name) {
   return name != NULL && strstr(name, "virtual-keyboard") == NULL &&
          !ends_with(name, "-system-control") &&
          !ends_with(name, "-consumer-control") &&
+         !ends_with(name, "-extra-buttons") &&
+         !ends_with(name, "-wmi-hotkeys") &&
          strcmp(name, "video-bus") != 0 &&
          strncmp(name, "power-button", 12) != 0;
 }
