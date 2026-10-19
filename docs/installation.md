@@ -4,32 +4,34 @@ These instructions are for a new installation. Do not run them on an already fun
 
 ## Prepare
 
-Set `FORK_URL` to this fork's actual GitHub Code URL and `REVIEWED_COMMIT` to the full reviewed commit. Neither is an invitation to install unreviewed mutable HEAD. Omarchy's normal add command clones the repository's default branch, so verify that it is the restoration branch before proceeding. Required tools are Git, Omarchy/Quickshell, a C compiler, Make, pkg-config and json-c headers; use your package manager if missing.
+The tested runtime source is `restoration/qt612` at `5e4679aa47d488df1237706810da7c4ede03b705`. Documentation-only successors do not retroactively receive a new GUI or CI result. Required tools include Git, Omarchy/Quickshell, a C compiler, Make, pkg-config and json-c headers; use your package manager if missing.
 
 Build a clean checkout outside the watched plugin directory. Keep the checkout for review and recovery:
 
 ```bash
 work=$(mktemp -d)
-git clone -- "$FORK_URL" "$work/source"
+FORK_URL=https://github.com/hamedemamimeybodi/omarchy-keyboard-layout.git
+REVIEWED_COMMIT=5e4679aa47d488df1237706810da7c4ede03b705
+git clone --branch restoration/qt612 --single-branch -- "$FORK_URL" "$work/source"
 git -C "$work/source" checkout --detach "$REVIEWED_COMMIT"
+test "$(git -C "$work/source" rev-parse HEAD)" = "$REVIEWED_COMMIT" || exit 1
 make -C "$work/source/native" clean all
 omarchy plugin validate "$work/source"
 ```
 
 Inspect the active shell configuration. Require the built-in widget selected, this plugin ID absent from configuration and its target directory absent; stop to review any existing installation or stale clone markers. Preserve a private copy of `~/.config/omarchy/shell.json` with ownership, modes and timestamps before modifying it. Do not change keyboard settings unnecessarily. For the tested setup, effective XKB options are `kb_layout = "us,ir"` and `kb_options = "grp:alt_shift_toggle"` in the existing Hyprland input configuration.
 
-## Add without enabling, then validate
+## Live installation gate
+
+The installed Omarchy add command clones mutable default HEAD and has no branch/SHA option. A GitHub `/tree/restoration/qt612` URL is not a Git clone URL. The branch-pinned preparation above is not a live installation. Check what the standard installer would fetch:
 
 ```bash
-omarchy plugin add "$FORK_URL" --yes
-target="$HOME/.config/omarchy/plugins/io.github.ilyazar.keyboard-layout"
-test "$(git -C "$target" rev-parse HEAD)" = "$REVIEWED_COMMIT" || exit 1
-install -m 755 "$work/source/native/keyboard-layoutd" "$target/native/keyboard-layoutd"
-omarchy plugin validate "$target"
-omarchy plugin enable io.github.ilyazar.keyboard-layout
+git ls-remote --symref "$FORK_URL" HEAD
 ```
 
-The absence of an existing config entry is essential: adding an ID already selected by stale config can enable it automatically. Omarchy watches plugin files, so publication/build replacement can hot-reload plugin widgets and other non-retained components. No desktop or auth/lock service restart is prescribed. Stop if current session safety cannot be established. Rebuilding before enable avoids executing an incompatible bundled binary. A locally rebuilt tracked binary may make later git updates dirty; keep its source commit/build record and review updates explicitly.
+The current default branch/HEAD has not been freshly verified in this documentation review. If it differs from the exact reviewed runtime source, stop before `omarchy plugin add`; a post-add checkout would already have published files into a watched directory. Do not assume that a documentation-only successor, another default branch, or mutable branch HEAD was tested. Ask for a reviewed installation route selecting the intended source instead of inventing a branch flag, changing the repository default, or modifying a functioning installation. No universal one-command install readiness is claimed here.
+
+If a future live installation is reviewed, require absence of this ID in both configuration and the target directory, preserve the built-in configuration/settings, validate a staged source build, and verify the exact installed commit before activation. Absence of stale selection matters: adding a configured ID can activate code automatically. The normal add command requests plugin rediscovery even without enabling; publication/build replacement can hot-reload watched components. Rebuild the native helper for the destination before activation. No shell/compositor or auth/lock restart is prescribed. A locally rebuilt tracked binary may make later updates dirty; preserve its source/build record and review updates explicitly.
 
 ## Disable or restore the built-in
 

@@ -15,6 +15,10 @@ The widget shows configured layouts and variants, provides a picker and scroll n
 
 See [installation and safe fallback](docs/installation.md), [troubleshooting](docs/troubleshooting.md), [compatibility](docs/compatibility.md), [technical report](docs/restoration-report.md), [testing](docs/testing.md), and [changelog](CHANGELOG.md).
 
+The tested restoration source is on `restoration/qt612` at `5e4679aa47d488df1237706810da7c4ede03b705`. A repository root URL does not select this branch. Prepare that exact source outside the live plugin directory and read the installation gate before using Omarchy's default-branch installer.
+
+The [published Actions run](https://github.com/hamedemamimeybodi/omarchy-keyboard-layout/actions/runs/39181234084) completed successfully for that source commit, and [upstream PR #22](https://github.com/omarchy-QOL/omarchy-keyboard-layout/pull/22) was verified open at publication. Current review/merge status must be checked on the PR. Overall workflow success is recorded separately from individual step/log verification; see [validation status](docs/validation-summary.md).
+
 ## Reported acceptance
 
 The operator reported PASS for rendering, US/Persian switching with Alt+Shift, independent layouts per window, closing/reopening windows, and repeated switching stability. Seven private fake-socket IPC scenarios also passed in the restoration work. These reports are narrower than independent verification of every platform or lifecycle branch. Live rollback and live daemon reconnection have **not** been independently tested.
